@@ -33,7 +33,7 @@ Fork or Clone this repository.
 Ensure you have the following files:
 
 - `main.py` (The logic script)
-- `requirements.txt` (Dependencies)
+- `pyproject.toml` + `uv.lock` (Dependencies, managed with [uv](https://docs.astral.sh/uv/))
 - `.github/workflows/bot_schedule.yml` (Automation schedule)
 
 ### 2. Configure Secrets
@@ -54,17 +54,17 @@ To test it immediately: Go to the **Actions** tab in GitHub, select **Run DolarV
 
 ## ⏰ Schedule Configuration
 
-The bot is scheduled using cron syntax in `.github/workflows/bot_schedule.yml`.
+The workflow runs every 15 minutes on a cron schedule, but the bot only sends a message when the current time in Venezuela (UTC-4) falls inside a send window: the first 15 minutes of 9:00 AM or 5:00 PM VET. This window-based gate self-corrects GitHub Actions scheduling delays and prevents duplicate sends.
 
 **Default Schedule (Venezuela Time UTC-4):**
 
-- 9:00 AM VET (13:00 UTC)
-- 5:00 PM VET (21:00 UTC)
+- 9:00–9:15 AM VET (13:00–13:15 UTC)
+- 5:00–5:15 PM VET (21:00–21:15 UTC)
 
-To change this, edit the cron line in the workflow file:
+To change this, edit the cron line in the workflow file (the send windows themselves are configured in `main.py`):
 
 ```yaml
-- cron: "0 13,21 * * *"
+- cron: "*/15 * * * *"
 ```
 
 ## 📂 File Structure
@@ -75,7 +75,8 @@ To change this, edit the cron line in the workflow file:
 │   └── workflows/
 │       └── bot_schedule.yml  # GitHub Actions configuration
 ├── main.py                   # Python script to fetch data and send message
-├── requirements.txt          # Python dependencies
+├── pyproject.toml            # Project metadata and dependencies
+├── uv.lock                   # Locked dependency versions
 └── README.md                 # This file
 ```
 
