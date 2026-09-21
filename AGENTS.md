@@ -10,7 +10,7 @@ TELEGRAM_TOKEN=<token> CHAT_ID=<chat-id> uv run python main.py
 
 `uv sync` first if `uv.lock` changed. `TELEGRAM_TOKEN` and `CHAT_ID` come from GitHub Secrets (see `.github/workflows/bot_schedule.yml`); the script does not fail without them — it silently skips sending (`main.py:68`). `get_exchange_rates` needs no env vars.
 
-**Send-window guard:** `main()` exits without fetching unless the current `America/Caracas` time is inside a send window — first 15 minutes of 09:00 or 17:00 (`in_send_window`, `main.py:80`). Running it at any other time just prints `Outside send window (...); skipping.`. To see the fetch/message path locally, run it during a window (or call `get_exchange_rates`/`format_message` directly from a REPL).
+**Send-window guard:** `main()` exits without fetching unless the current `America/Caracas` time is inside a send window — first 45 minutes of 09:00 or 17:00 (`in_send_window`, `main.py:80`). Running it at any other time just prints `Outside send window (...); skipping.`. To see the fetch/message path locally, run it during a window (or call `get_exchange_rates`/`format_message` directly from a REPL).
 
 ## Structure / flow
 
