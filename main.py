@@ -4,6 +4,7 @@ from zoneinfo import ZoneInfo
 
 import requests
 import telebot
+from telebot.apihelper import ApiTelegramException
 
 # Configuration
 API_URL = "https://ve.dolarapi.com/v1/dolares"
@@ -73,7 +74,7 @@ def send_telegram_message(message):
     try:
         bot.send_message(CHAT_ID, message, parse_mode="Markdown")
         print("Message sent successfully!")
-    except (telebot.apihelper.ApiTelegramException, requests.RequestException) as e:
+    except (ApiTelegramException, requests.RequestException) as e:
         print(f"Error sending message: {e}")
 
 
