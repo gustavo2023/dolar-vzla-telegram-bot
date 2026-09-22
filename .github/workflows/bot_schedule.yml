@@ -2,9 +2,10 @@ name: Run DolarVzlaBot
 
 on:
   schedule:
-    # Runs every 15 minutes; main.py only sends during the 09:00-09:15 and
-    # 17:00-17:15 VET windows (13:00/21:00 UTC, Venezuela is UTC-4)
-    - cron: "*/15 * * * *"
+    # Runs at 13:00 UTC (9:00 AM Venezuela) and 21:00 UTC (5:00 PM Venezuela)
+    # Venezuela is UTC-4. main.py sends only during those VET hours; the wide
+    # window absorbs GitHub's scheduled-run start delays.
+    - cron: "0 13,21 * * *"
   workflow_dispatch: # Allows manual triggering from GitHub UI
 
 concurrency:

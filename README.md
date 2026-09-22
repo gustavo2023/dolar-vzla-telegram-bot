@@ -54,18 +54,20 @@ To test it immediately: Go to the **Actions** tab in GitHub, select **Run DolarV
 
 ## ⏰ Schedule Configuration
 
-The workflow runs every 15 minutes on a cron schedule, but the bot only sends a message when the current time in Venezuela (UTC-4) falls inside a send window: the first 45 minutes of 9:00 AM or 5:00 PM VET. This window-based gate absorbs GitHub Actions scheduling delays (typically 5–45 minutes) and prevents most duplicate sends.
+The workflow is scheduled twice a day, and the bot sends a message only when it runs during the 9:00 AM or 5:00 PM hour in Venezuela (UTC-4). The hour-wide gate absorbs GitHub Actions start delays (scheduled runs can begin tens of minutes late) and blocks accidental manual sends outside those hours.
 
 **Default Schedule (Venezuela Time UTC-4):**
 
-- 9:00–9:45 AM VET (13:00–13:45 UTC)
-- 5:00–5:45 PM VET (21:00–21:45 UTC)
+- 9:00–9:59 AM VET (13:00–13:59 UTC)
+- 5:00–5:59 PM VET (21:00–21:59 UTC)
 
-To change this, edit the cron line in the workflow file (the send windows themselves are configured in `main.py`):
+To change the send hours, edit `SEND_HOURS` in `main.py`; to change the workflow trigger, edit the cron line:
 
 ```yaml
-- cron: "*/15 * * * *"
+- cron: "0 13,21 * * *"
 ```
+
+Keep the cron at a low frequency: GitHub Actions heavily throttles high-frequency schedules (a `*/15` cron was observed firing only ~7 times a day instead of 96), so extra ticks cannot be relied on to catch delayed sends.
 
 ## 📂 File Structure
 

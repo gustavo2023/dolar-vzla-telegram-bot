@@ -10,7 +10,6 @@ from telebot.apihelper import ApiTelegramException
 API_URL = "https://ve.dolarapi.com/v1/dolares"
 VZLA_TZ = ZoneInfo("America/Caracas")
 SEND_HOURS = (9, 17)
-SEND_WINDOW_MINUTES = 45
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 CHAT_ID = os.environ.get("CHAT_ID")
 
@@ -79,8 +78,8 @@ def send_telegram_message(message):
 
 
 def in_send_window(now):
-    """True when the current VET time is inside a send window (first 45 min of 09:00/17:00)."""
-    return now.hour in SEND_HOURS and now.minute < SEND_WINDOW_MINUTES
+    """True when the current VET hour is a send hour (09:00 or 17:00)."""
+    return now.hour in SEND_HOURS
 
 
 def main():
